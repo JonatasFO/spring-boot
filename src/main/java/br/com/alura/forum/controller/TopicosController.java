@@ -1,7 +1,6 @@
 package br.com.alura.forum.controller;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -11,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
@@ -49,7 +47,7 @@ public class TopicosController {
 	@Cacheable(value = "listaDeTopicos")
 	public Page<TopicoDTO> lista(@RequestParam(required = false) String nomeCurso,
 			@PageableDefault(sort = "id", direction = Direction.DESC, page = 0, size = 10) Pageable paginacao) {
-		
+
 		if (nomeCurso == null) {
 			Page<Topico> topicos = topicoRepository.findAll(paginacao);
 			return TopicoDTO.converter(topicos);
@@ -59,8 +57,8 @@ public class TopicosController {
 		}
 
 	}
-	
-	//Continuar do Módulo3 aula: 02 Habilitando o Spring Security
+
+	// Continuar do Módulo3 aula: 02 Habilitando o Spring Security
 
 	@PostMapping
 	@Transactional
@@ -68,11 +66,11 @@ public class TopicosController {
 	public ResponseEntity<TopicoDTO> cadastrar(@RequestBody @Valid TopicoForm form, UriComponentsBuilder uriBuilder) {
 		Topico topico = form.converter(cursoRepository);
 		topicoRepository.save(topico);
-		
+
 		URI uri = uriBuilder.path("/topicos/{id}").buildAndExpand(topico.getId()).toUri();
 		return ResponseEntity.created(uri).body(new TopicoDTO(topico));
 	}
-	
+
 	@GetMapping("/{id}")
 	public ResponseEntity<DetalhesDoTopicoDTO> detalhar(@PathVariable Long id) {
 		Optional<Topico> topico = topicoRepository.findById(id);
@@ -81,7 +79,7 @@ public class TopicosController {
 		}
 		return ResponseEntity.notFound().build();
 	}
-	
+
 	@PutMapping("/{id}")
 	@Transactional
 	@CacheEvict(value = "listaDeTopicos", allEntries = true)
@@ -93,7 +91,7 @@ public class TopicosController {
 		}
 		return ResponseEntity.notFound().build();
 	}
-	
+
 	@DeleteMapping("/{id}")
 	@Transactional
 	@CacheEvict(value = "listaDeTopicos", allEntries = true)
@@ -105,5 +103,5 @@ public class TopicosController {
 		}
 		return ResponseEntity.notFound().build();
 	}
-	
+
 }

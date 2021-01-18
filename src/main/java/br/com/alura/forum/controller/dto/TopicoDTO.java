@@ -1,7 +1,6 @@
 package br.com.alura.forum.controller.dto;
 
 import java.time.LocalDateTime;
-import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 
